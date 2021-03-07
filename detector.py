@@ -29,18 +29,18 @@ def calculate_position(frame, lines):
         if y1 > max_y1:
             max_y1 = y1
     print("max_y1: " + str(max_y1) + " max_y2: " + str(max_y2))
-    return True
-    '''
-    if (max_y2 > 450) and (max_y1 > 450):
-        return "Car Left"
-    elif (max_y2 < 150) and (max_y1 < 150):
+    
+    if (max_y2 > 350) and (max_y1 > 350):
         return "Car Right"
+    elif (max_y2 < 150) and (max_y1 < 150):
+        return "Car Left"
+    '''
     if (max_y2 - max_y1) > 30:
         return "Steering Left"
     elif (max_y1 - max_y2) > 30:
         return "Steering Right"
-    return "Center"
     '''
+    return "Center"
 
 cap = cv.VideoCapture(0)
 #ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
@@ -51,12 +51,12 @@ while (cap.isOpened()):
     ret, frame = cap.read()
     canny = do_canny(frame)
     cv.imshow("canny", canny)
-    cv.imshow("video", frame)
-    plt.imshow(frame)
-    plt.show()
-    #canny = do_canny(frame)
-    #hough = cv.HoughLinesP(canny, 2, np.pi / 180, 100, np.array([]), minLineLength = 100, maxLineGap = 50)
-    #position = calculate_position(frame, hough)
+    #cv.imshow("video", frame)
+    #plt.imshow(frame)
+    #plt.show()
+    hough = cv.HoughLinesP(canny, 2, np.pi / 180, 100, np.array([]), minLineLength = 100, maxLineGap = 50)
+    position = calculate_position(frame, hough)
+    print(position)
     if cv.waitKey(10) & 0xFF == ord('q'):
         break
 
