@@ -1,7 +1,7 @@
 #ifndef _BSPINIT_H
 #define _BSPINIT_H
 
-extern void bsp_init(void);
+extern void init_serial(void);
 
 extern void transmit_data(char *pdata);
 

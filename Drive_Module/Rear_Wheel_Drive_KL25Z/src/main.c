@@ -6,7 +6,7 @@
 #include "infared.h"
 #include "ultrasonic.h"
 #include "serial.h"
-//#include "logger.h"
+#include "interrupts.h"
 #include "motor_control.h"
 
 /*----------------------------------------------------------------------------
@@ -14,13 +14,15 @@
  *----------------------------------------------------------------------------*/
 int main (void) {
 	
-	init_infared_sensors();
+	init_serial();
 	init_motor_control();
+	init_infared_sensors();
+	init_ultrasonic_sensors();
 	init_RGB_LEDs();
-	bsp_init();
 	__enable_irq();
 	
-	//transmit_data("InitComplete\r\n");
+	transmit_data("InitComplete");
+	//get_distance();
 	
 	while (1) {
 		control_RGB_LEDs(ir_detections[0], ir_detections[1], 0);

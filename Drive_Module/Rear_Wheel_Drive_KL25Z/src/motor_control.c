@@ -41,21 +41,3 @@ void control_motor(int state){
 	}
 }
 
-void stop_motor(){
-	transmit_data("Stopped\n");
-	control_motor(0);
-}
-
-
-void PORTA_IRQHandler(void) { 
-	NVIC_ClearPendingIRQ(PORTA_IRQn);
-	
-	if (PORTA->ISFR & MASK(MOTOR_CONTROL)) {
-		
-		control_motor(1);
-		
-		PORTA->ISFR |= MASK(MOTOR_CONTROL);
-	}
-
-}
-

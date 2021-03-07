@@ -1,0 +1,17 @@
+--cpu Cortex-M0+
+".\obj\startup_mkl25z4.o"
+".\obj\system_mkl25z4.o"
+".\obj\main.o"
+".\obj\switches.o"
+".\obj\leds.o"
+".\obj\debug_signals.o"
+".\obj\infared.o"
+".\obj\motor_control.o"
+".\obj\serial.o"
+".\obj\logger.o"
+".\obj\ultrasonic.o"
+".\obj\interrupts.o"
+--library_type=microlib --strict --scatter ".\obj\BasicUI.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\lst\BasicUI.map" -o .\obj\BasicUI.axf

@@ -11,6 +11,6 @@ extern volatile int motor_state;
 
 extern void init_motor_control(void);
 
-extern void stop_motor(void);
+extern void control_motor(int);
 
 #endif

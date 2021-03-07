@@ -1,5 +1,7 @@
 #include "mkl25z4.h"
 #include <stdint.h>
+#include <stdio.h>
+#include <string.h>
 
 #define SYSTEM_CLOCK_FREQ      48000000UL  // 48 Mhz
 #define SYTICK_TIME_INTERVAL   1           // 1 msec
@@ -14,7 +16,7 @@ static void uart0_init(void);
 
 
 
-void bsp_init(void)
+void init_serial(void)
 {
 	// Disable all global interrupts
 	__disable_irq();
@@ -122,16 +124,23 @@ void transmit_data(char *pdata)
 	// loading new byte
 	while (*pdata)
 	{
-		//__disable_irq();
 		UART0->D = *pdata;
 		
 		// Wait until byte is transmitted from Tx Buffer
 		while (!(UART0->S1 & UART_S1_TDRE_MASK)) { 
 		}
-		//__enable_irq();
 
 		pdata++;
 	}
+	
+	char* endChar = "\n";
+	
+	UART0->D = *endChar;
+	
+	// Wait until end byte is transmitted from Tx Buffer
+	while (!(UART0->S1 & UART_S1_TDRE_MASK)) { 
+	}
+	
 }
 
 // UART0 status and error Interrupt

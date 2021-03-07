@@ -3,10 +3,12 @@
 
 // Define the number of sensors starting at the chosen PORTC pin 
 #define STARTING_IR_POS (2)
-#define SENSOR_NUM (2)
+#define IR_SENSOR_NUM (2)
 
-extern volatile int ir_detections[SENSOR_NUM];
+extern volatile int ir_detections[IR_SENSOR_NUM];
 
 extern void init_infared_sensors(void);
+
+extern int ir_detected_flag;
 
 #endif
