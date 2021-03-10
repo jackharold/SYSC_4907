@@ -156,15 +156,14 @@ void rotateRight() {
 
 
 void loop() {
-  drive();
-  delay(3000);
-  cease();
-  delay(1000);
-  repositionLeft();
-  delay(1000);
-  repositionRight();
-  delay(1000);
-  rotateLeft();
-  delay(1000);
-  rotateRight();
+  if (Serial.available() > 0){
+    String value = Serial.readStringUntil('\n');
+    value.trim();
+    if (value == "go"){
+      delay(1000);
+      repositionLeft();
+      delay(1000);
+      repositionRight();
+    }
+  }
 }
