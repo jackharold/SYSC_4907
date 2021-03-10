@@ -1,13 +1,13 @@
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
-#import serial
+import serial
 import time
 
 steering_right_counter = 0
 steering_left_counter = 0
-car_right_coutner = 0
-car_left_coutner = 0
+car_right_counter = 0
+car_left_counter = 0
 num_checks = 0
 start_coutner = 0
 
@@ -22,6 +22,8 @@ def calculate_position(frame, lines):
     max_y2 = 0
     slope = 0
     y_intercept = 0
+    if lines is None:
+        return "Car Left"
     for line in lines:
         x1,y1,x2,y2 = line.reshape(4)
         if y2 > max_y2:
@@ -43,9 +45,11 @@ def calculate_position(frame, lines):
     return "Center"
 
 cap = cv.VideoCapture(0)
-#ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
-#ser.flush()
-
+ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+ser.flush()
+ser.write(b"go")
+text = ser.readline().decode('utf-8').rstrip()
+print(text)
 
 while (cap.isOpened()):
     ret, frame = cap.read()
@@ -57,6 +61,26 @@ while (cap.isOpened()):
     hough = cv.HoughLinesP(canny, 2, np.pi / 180, 100, np.array([]), minLineLength = 100, maxLineGap = 50)
     position = calculate_position(frame, hough)
     print(position)
+    if position == "Car Right":
+        car_right_counter += 1
+        print(text)
+    elif position == "Car Left":
+        car_left_counter += 1
+    num_checks += 1
+    if num_checks == 10:
+        if car_right_counter >= 5:
+           ser.write(b"reposition left")
+           time.sleep(2)
+           text = ser.readline().decode('utf-8').rstrip()
+           print(text)
+        elif car_left_counter >= 5:
+           ser.write(b"reposition right")
+           time.sleep(2)
+           text = ser.readline().decode('utf-8').rstrip()
+           print(text)
+        car_left_counter = 0
+        car_right_counter = 0
+        num_checks = 0
     if cv.waitKey(10) & 0xFF == ord('q'):
         break
 

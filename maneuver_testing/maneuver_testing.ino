@@ -116,26 +116,22 @@ void left(double degree) {
 
 void repositionLeft() {
   left30();
+  delay(1000);
   drive();
-  delay(300);
-  cease();
-  right(20);
-  drive();
-  delay(200);
+  delay(5000);
   cease();
   steady90();
+  delay(1000);
 }
 
 void repositionRight() {
   right30();
+  delay(1000);
   drive();
-  delay(300);
-  cease();
-  left(20);
-  drive();
-  delay(200);
+  delay(5000);
   cease();
   steady90();
+  delay(1000);
 }
 
 void rotateLeft() {
@@ -159,11 +155,24 @@ void loop() {
   if (Serial.available() > 0){
     String value = Serial.readStringUntil('\n');
     value.trim();
+    Serial.print("Arduino recieved: ");
+    Serial.println(value);
     if (value == "go"){
+      steady90();
+      drive();
+    }
+    else if (value == "reposition right"){
+      repositionRight();
       delay(1000);
+      drive();
+    }
+    else if (value == "reposition left"){
       repositionLeft();
       delay(1000);
-      repositionRight();
+      drive();
+    }
+    else if (value == "stop"){
+      cease();
     }
   }
 }
