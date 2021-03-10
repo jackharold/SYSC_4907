@@ -11,30 +11,20 @@
 // Local function prototypes
 static void gpio_init(void);
 static void config_sys_clock(void);
-static void SysTickConfig(void);
 static void uart0_init(void);
 
 
 
 void init_serial(void)
 {
-	// Disable all global interrupts
-	__disable_irq();
-	
 	// Configure System Clock
 	config_sys_clock();
 	
 	// Initialize GPIO ports
 	gpio_init();
 	
-	// Initialize system tick timer
-	//SysTickConfig();
-	
 	// Initialize UART module
 	uart0_init();
-	
-	// Enable all global interrupts
-	__enable_irq();
 }
 
 static void config_sys_clock(void)
@@ -70,16 +60,6 @@ static void gpio_init(void)
 	GPIOB_PDOR |= (uint32_t)(1 << 18); /* PTB18 is driven HIGH */
 	GPIOB_PDOR |= (uint32_t)(1 << 19); /* PTB18 is driven HIGH */
 	GPIOD_PDOR |= (uint32_t)(1 << 1);  /* PTD1  is driven HIGH */
-}
-
-static void SysTickConfig(void)
-{
-  SysTick->LOAD  = (uint32_t)(SYSTICK_TMR_RELOAD_VAL);              /* set reload register */
-  NVIC_SetPriority (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL); /* set Priority for Systick Interrupt */
-  SysTick->VAL   = 0UL;                                             /* Load the SysTick Counter Value */
-  SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
-                   SysTick_CTRL_TICKINT_Msk   |
-                   SysTick_CTRL_ENABLE_Msk;                         /* Enable SysTick IRQ and SysTick Timer */
 }
 
 static void uart0_init(void)

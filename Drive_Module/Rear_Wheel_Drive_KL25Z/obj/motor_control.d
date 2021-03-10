@@ -8,4 +8,4 @@
   D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\arm_compat.h \
   D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\arm_acle.h \
   D:/Keil_v5/ARM/PACK/Keil/Kinetis_KLxx_DFP/1.15.0/Device/Include/system_MKL25Z4.h \
-  inc\gpio_defs.h inc\serial.h inc\motor_control.h
+  inc\gpio_defs.h inc\infared.h inc\motor_control.h

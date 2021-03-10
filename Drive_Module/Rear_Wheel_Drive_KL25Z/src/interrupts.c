@@ -12,17 +12,17 @@
 int us_active = 0;
 int us_detected_count = 0;
 
-
 void emergency_maneuver(volatile int values[IR_SENSOR_NUM]) {
 	
-	if(values[0] & values[1]){
-		control_motor(0);
+	for (int i=0; i < IR_SENSOR_NUM; i++){
+		control_motor(i, values[i]);
 	}
+	
 }
 
 void send_updated_data() {
 	
-	char data[2+IR_SENSOR_NUM+US_SENSOR_NUM];
+	char data[2+IR_SENSOR_NUM+6*US_SENSOR_NUM];
 		
 		// Add Infared Data to the sent datastream 
 		data[0] = 'I';
@@ -36,8 +36,8 @@ void send_updated_data() {
 		
 		int lastDataSize = 1;
 		
-		for(int i=0; i < (US_SENSOR_NUM); i++) {//(sizeof(roundf(us_detections[i]*100)/100)) ){ 
-			sprintf(&data[i + IR_SENSOR_NUM + 2], "%.2f", us_detections[i]);
+		for(int i=0; i < (US_SENSOR_NUM*5); i+=6) {//(sizeof(roundf(us_detections[i]*100)/100)) ){ 
+			sprintf(&data[i + IR_SENSOR_NUM + 2], "%.2fU", us_detections[i/6]);
 			
 		}
 
@@ -53,63 +53,53 @@ void PORTA_IRQHandler(void) {
 	/* Motor Control Segment */
 	if (PORTA->ISFR & MASK(MOTOR_CONTROL)) {
 		
-		control_motor(1);
+		for (int i=0; i < IR_SENSOR_NUM; i++){
+			control_motor(i, 0);
+		}
 		
 		PORTA->ISFR |= MASK(MOTOR_CONTROL);
 	}
 	
 	
 	/* Ultrasonic Segment */
-	if (us_active){
+	for(int i=0; i < US_SENSOR_NUM; i++){
 	
-		for(int i=0; i < US_SENSOR_NUM; i++){
-		
-			if ((PORTA->ISFR & MASK(STARTING_US_POS + i))) {
-				float timeInterval = TPM0->CNT;
-				// Update time for this sensor
-				us_detected_count += 1;
-				
+		if ((PORTA->ISFR & MASK( US_SENSOR_POSITIONS[i] ))) {
+			float timeInterval = TPM0->CNT;
+			// Update time for this sensor
+			us_detected_count += 1;
+			
+			if (us_active) {
 				us_detections[i] = timeInterval/(48*58) ;
 				//us_detections[i] = (float) ((uint16_t)TPM0->CNT / (12*58)) ;
 				//us_detections[i] = (float) ((uint16_t)TPM0->CNT / (29 / 2)) ;
-				
-				PORTA->ISFR |= MASK(STARTING_US_POS + i);
 			}
 			
-		}
-		
-		if (us_detected_count >= US_SENSOR_NUM){
-			TPM0->CNT = 0;
-			TPM0->SC |= TPM_SC_CMOD(0);
-			us_detected_count = 0;
-			us_active = 0;
+			PORTA->ISFR |= MASK( US_SENSOR_POSITIONS[i] );
 			
-			send_updated_data();
 			
-		}
-		
-	} else {
-		// Initialize the time once all sensors have started
-		
-		for(int i=0; i < US_SENSOR_NUM; i++){
-		
-			if ((PORTA->ISFR & MASK(STARTING_US_POS + i))) {
-				
-				us_detected_count += 1;
-				
-				PORTA->ISFR |= MASK(STARTING_US_POS + i);
+			if (us_detected_count >= US_SENSOR_NUM){
+				// Reset timer when all sensors close
+				if (us_active) {
+					TPM0->CNT = 0;
+					TPM0->SC &= ~TPM_SC_CMOD(0x3);
+					us_detected_count = 0;
+					us_active = 0;
+					
+					send_updated_data();
+					
+				} else {
+					// Initialize the time once all sensors have started
+					TPM0->CNT = 0;
+					TPM0->SC |= TPM_SC_CMOD(1);
+					us_detected_count = 0;
+					us_active = 1;
+				}	
 			}
 			
-		}
-		
-		if(us_detected_count >= US_SENSOR_NUM){
-			TPM0->CNT = 0;
-			TPM0->SC |= TPM_SC_CMOD(1);
-			us_detected_count = 0;
-			us_active = 1;
 		}
 	}
-	
+
 }
 
 // Port D Handler used by the IR Sensor
@@ -123,8 +113,8 @@ void PORTD_IRQHandler(void) {
 			//Set flag
 			ir_detected_flag = 1;
 			
-			// Flip on an Edge Detection
-			ir_detections[i] = !ir_detections[i];
+			// Flip on an Edge Detection (Inverted signal is due to the Sensor configuration)
+			ir_detections[i] = !(PTD->PDIR & MASK(STARTING_IR_POS + i));
 			
 			PORTD->ISFR |= MASK(STARTING_IR_POS + i);
 		}

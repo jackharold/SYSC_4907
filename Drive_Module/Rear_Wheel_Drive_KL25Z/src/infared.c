@@ -29,7 +29,7 @@ void init_infared_sensors(){
 	
 	
 	/* Enable Interrupts */
-	NVIC_SetPriority(PORTD_IRQn, 192); // 0, 64, 128 or 192
+	NVIC_SetPriority(PORTD_IRQn, 128); // 0, 64, 128 or 192
 	NVIC_ClearPendingIRQ(PORTD_IRQn); 
 	NVIC_EnableIRQ(PORTD_IRQn);
 	

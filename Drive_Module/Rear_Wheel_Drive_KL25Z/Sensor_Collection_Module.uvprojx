@@ -403,19 +403,9 @@
               <FilePath>.\src\main.c</FilePath>
             </File>
             <File>
-              <FileName>switches.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\switches.c</FilePath>
-            </File>
-            <File>
               <FileName>LEDs.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\LEDs.c</FilePath>
-            </File>
-            <File>
-              <FileName>debug_signals.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\debug_signals.c</FilePath>
             </File>
             <File>
               <FileName>infared.c</FileName>
@@ -431,11 +421,6 @@
               <FileName>serial.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\serial.c</FilePath>
-            </File>
-            <File>
-              <FileName>logger.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\logger.c</FilePath>
             </File>
             <File>
               <FileName>ultrasonic.c</FileName>

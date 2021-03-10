@@ -22,10 +22,13 @@ int main (void) {
 	__enable_irq();
 	
 	transmit_data("InitComplete");
-	//get_distance();
+	//Start_PIT(1);
+	get_distance();
 	
 	while (1) {
-		control_RGB_LEDs(ir_detections[0], ir_detections[1], 0);
+		Delay(1000);
+		get_distance();
+		//control_RGB_LEDs(ir_detections[0], ir_detections[1], 0);
 	}
 }
 

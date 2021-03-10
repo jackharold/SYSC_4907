@@ -1,23 +1,27 @@
 #include <MKL25Z4.H>
 #include "gpio_defs.h"
-#include "serial.h"
+#include "infared.h"
 #include "motor_control.h"
 
 volatile int motor_state = 0;
 
-void control_motor(int state);
+void control_motor(int, int);
 
 
 void init_motor_control(){
 	
 	SIM->SCGC5 |=  SIM_SCGC5_PORTA_MASK | SIM_SCGC5_PORTC_MASK; /* enable clock for ports A and C */
 	
-	// Enable motor out Pin on Port C as output
-	PORTC->PCR[MOTOR_OUT] &= ~PORT_PCR_MUX_MASK;          
-	PORTC->PCR[MOTOR_OUT] |= PORT_PCR_MUX(1);   
-	PTC->PDDR |= MASK(MOTOR_OUT);
+	for(int i=0; i < IR_SENSOR_NUM; i++){
+		// Enable motor out Pins on Port C as output
+		PORTC->PCR[MOTOR_OUT_START + i] &= ~PORT_PCR_MUX_MASK;          
+		PORTC->PCR[MOTOR_OUT_START + i] |= PORT_PCR_MUX(1);   
+		PTC->PDDR |= MASK(MOTOR_OUT_START + i);
+	}
 	
-	control_motor(0);
+	for (int i=0; i < IR_SENSOR_NUM; i++){
+			control_motor(i, 0);
+	}
 	
 	
 	PORTA->PCR[MOTOR_CONTROL] &= ~PORT_PCR_MUX_MASK;          
@@ -32,12 +36,13 @@ void init_motor_control(){
 }
 
 // Change Motor state to On or Off
-void control_motor(int state){
-	motor_state = !!state; // Convert to 0 or 1
-	if (state){
-		PTC->PSOR |= MASK(MOTOR_OUT);
+void control_motor(int control, int state){
+	
+	if (!!state){
+		PTC->PSOR |= MASK(MOTOR_OUT_START + control);
 	} else {
-		PTC->PCOR |= MASK(MOTOR_OUT);
+		PTC->PCOR |= MASK(MOTOR_OUT_START + control);
 	}
+	
 }
 

@@ -5,11 +5,11 @@
 #include "ultrasonic.h" 
 
 volatile unsigned state = 0;
-float us_detections[US_SENSOR_NUM];
+volatile float us_detections[US_SENSOR_NUM];
+int US_SENSOR_POSITIONS[] = {12, 13, 16, 17};
 
 int triggerTimerActive = 0;
 int cycleTimerActive = 0;
-
 
 
 
@@ -37,8 +37,8 @@ void Init_PIT(unsigned period_us_0, unsigned period_us_1) {
 	PIT->CHANNEL[1].TCTRL |= PIT_TCTRL_TIE_MASK;
 	
 
-	/* Enable Interrupts */
-	NVIC_SetPriority(PIT_IRQn, 196); // 0, 64, 128 or 192
+	/* Enable Interrupts */ 
+	NVIC_SetPriority(PIT_IRQn, 128); // 0, 64, 128 or 192
 	NVIC_ClearPendingIRQ(PIT_IRQn); 
 	NVIC_EnableIRQ(PIT_IRQn);	
 }
@@ -46,12 +46,18 @@ void Init_PIT(unsigned period_us_0, unsigned period_us_1) {
 
 void Start_PIT(int timer) {
 // Enable counter
+	PIT->CHANNEL[timer].LDVAL = PIT_LDVAL_TSV( ( (timer)?(TRIGGER_INTERVAL):((CYCLE_INTERVAL) ) *24 )); 
+	(timer) ? (triggerTimerActive = 1): (cycleTimerActive = 1);
+	
 	PIT->CHANNEL[timer].TCTRL |= PIT_TCTRL_TEN_MASK;
 }
 
 void Stop_PIT(int timer) {
-// Enable counter
+// Disable counter
 	PIT->CHANNEL[timer].TCTRL &= ~PIT_TCTRL_TEN_MASK;
+	
+	PIT->CHANNEL[timer].LDVAL = PIT_LDVAL_TSV( ( (timer)?(TRIGGER_INTERVAL):((CYCLE_INTERVAL) ) *24 ));
+	(timer) ? (triggerTimerActive = 0): (cycleTimerActive = 0);
 }
 
 
@@ -63,39 +69,38 @@ void PIT_IRQHandler() {
 	// check to see which channel triggered interrupt 
 	if (PIT->CHANNEL[0].TFLG & PIT_TFLG_TIF_MASK) {
 		// clear status flag for timer channel 0
-		PIT->CHANNEL[0].TFLG &= PIT_TFLG_TIF_MASK;
+		PIT->CHANNEL[0].TFLG |= PIT_TFLG_TIF_MASK;
 		
-		SET_TRIG(0);
 		Stop_PIT(0);
-		//transmit_data("0");
+		//PIT->CHANNEL[1].LDVAL = PIT_LDVAL_TSV(CYCLE_INTERVAL*24);
 		
-	} else if (PIT->CHANNEL[1].TFLG & PIT_TFLG_TIF_MASK) {
+	}
+	if (PIT->CHANNEL[1].TFLG & PIT_TFLG_TIF_MASK) {
 		// clear status flag for timer channel 1
-		PIT->CHANNEL[1].TFLG &= PIT_TFLG_TIF_MASK;
+		PIT->CHANNEL[1].TFLG |= PIT_TFLG_TIF_MASK;
 		
-		SET_TRIG(1);
+		//PIT->CHANNEL[1].LDVAL = PIT_LDVAL_TSV(CYCLE_INTERVAL*24);
+		//Stop_PIT(1);
+		
+		//SET_TRIG(1);
 		Start_PIT(0);
-		//transmit_data("1");
-		
+		//get_distance();
 	} 
 }
-
-
-
 
 
 void init_ultrasonic_sensors(void) {
 	
 	// TPM Init
-	MCG->C1 |= 0x3;
+	MCG->C1 |= 0x1;
 	MCG->C2 |= MCG_C2_IRCS_MASK;
-	SIM->SOPT2 |= SIM_SOPT2_TPMSRC(0x03);
+	SIM->SOPT2 |= SIM_SOPT2_TPMSRC(0x01);
+	SIM->SOPT2 &= ~SIM_SOPT2_PLLFLLSEL(0x1);
 	SIM->SCGC6 |= SIM_SCGC6_TPM0_MASK;
-	TPM0->SC |= TPM_SC_CMOD(0x0);
+	TPM0->SC &= ~TPM_SC_CMOD(0x3);
 	TPM0->MOD = 65535;
 	TPM0->CNT = 0;
-	TPM0->SC |= TPM_SC_PS(0);
-	
+	TPM0->SC &= ~TPM_SC_PS(0x1);
 	
 	
 	SIM->SCGC5 |=  SIM_SCGC5_PORTA_MASK; /* enable clock for port A */
@@ -104,11 +109,10 @@ void init_ultrasonic_sensors(void) {
 		// For each US sensor, set up the GPIO input configurations
 		
 		
-		PORTA->PCR[STARTING_US_POS + i] |= PORT_PCR_MUX(1);
-		PORTA->PCR[STARTING_US_POS + i] |= PORT_PCR_IRQC(0xb);
+		PORTA->PCR[ US_SENSOR_POSITIONS[i] ] |= PORT_PCR_MUX(1);
+		PORTA->PCR[ US_SENSOR_POSITIONS[i] ] |= PORT_PCR_IRQC(0xb);
 		
-		
-		PTD->PDDR &= ~MASK(STARTING_US_POS + i);
+		PTD->PDDR &= ~MASK( US_SENSOR_POSITIONS[i] );
 		
 	}
 	
@@ -122,25 +126,26 @@ void init_ultrasonic_sensors(void) {
 	}
 	
 	/* Enable Interrupts */
-	NVIC_SetPriority(PORTA_IRQn, 128); 
+	NVIC_SetPriority(PORTA_IRQn, 64); 
 	NVIC_ClearPendingIRQ(PORTA_IRQn); 
 	NVIC_EnableIRQ(PORTA_IRQn);
 	
-	Init_PIT(TRIGGER_INTERVAL, CYCLE_INTERVAL);
+	//Init_PIT(TRIGGER_INTERVAL, CYCLE_INTERVAL);
 	
-	Start_PIT(1);
 }
 
-void Delay (uint32_t dly) {
+void Delay (int dly) {
   volatile uint32_t t;
 
-	for (t=dly*10000; t>0; t--)
+	for (t=(uint32_t)dly*10000; t>0; t--)
 		;
 }
 
 void get_distance (void) {
   SET_TRIG(1);
-	Start_PIT(0);
+	Delay(100);
+	//Start_PIT(0);
+	//while(triggerTimerActive);
 	SET_TRIG(0);
 }
 

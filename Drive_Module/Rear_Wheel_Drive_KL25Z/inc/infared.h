@@ -1,9 +1,9 @@
 #ifndef INFARED_H
 #define INFARED_H
 
-// Define the number of sensors starting at the chosen PORTC pin 
+// Define the number of sensors starting at the chosen PORTD pin 
 #define STARTING_IR_POS (2)
-#define IR_SENSOR_NUM (2)
+#define IR_SENSOR_NUM (3)
 
 extern volatile int ir_detections[IR_SENSOR_NUM];
 
