@@ -14,7 +14,7 @@ start_coutner = 0
 def do_canny(frame):
     gray = cv.cvtColor(frame, cv.COLOR_RGB2GRAY)
     blur = cv.GaussianBlur(gray, (5, 5), 0)
-    canny = cv.Canny(blur, 50, 150)
+    canny = cv.Canny(blur, 100, 200)
     return canny
 
 def calculate_position(frame, lines):
