@@ -3,7 +3,7 @@
 
 // Define the number of sensors starting at the chosen PORTD pin 
 #define STARTING_IR_POS (2)
-#define IR_SENSOR_NUM (3)
+#define IR_SENSOR_NUM (5)
 
 extern volatile int ir_detections[IR_SENSOR_NUM];
 

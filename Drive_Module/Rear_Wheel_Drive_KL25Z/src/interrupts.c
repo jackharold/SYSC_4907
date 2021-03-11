@@ -22,7 +22,7 @@ void emergency_maneuver(volatile int values[IR_SENSOR_NUM]) {
 
 void send_updated_data() {
 	
-	char data[2+IR_SENSOR_NUM+6*US_SENSOR_NUM];
+	char data[2+IR_SENSOR_NUM+6*US_SENSOR_NUM+1];
 		
 		// Add Infared Data to the sent datastream 
 		data[0] = 'I';
@@ -40,6 +40,8 @@ void send_updated_data() {
 			sprintf(&data[i + IR_SENSOR_NUM + 2], "%.2fU", us_detections[i/6]);
 			
 		}
+		
+		data[2+IR_SENSOR_NUM+6*US_SENSOR_NUM] = '\0';
 
 		transmit_data(data);
 

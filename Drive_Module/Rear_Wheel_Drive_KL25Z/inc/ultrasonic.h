@@ -2,7 +2,7 @@
 #define ULTRASONIC_H
 
 // Define the number of sensors starting at the chosen PORTA pin 
-#define US_SENSOR_NUM (2)
+#define US_SENSOR_NUM (0)
 
 #define TRIGGER_INTERVAL (100)
 #define CYCLE_INTERVAL (0.5 * 1000000)
