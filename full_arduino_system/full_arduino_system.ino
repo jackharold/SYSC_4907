@@ -45,6 +45,8 @@ double right;
 double rightVolt;
 double x = 0.0;
 
+boolean newData = false;
+
 void setup() {
   servo.attach(10);
   Serial.begin(9600);
@@ -122,48 +124,56 @@ void steady90() {
   servo.writeMicroseconds(1175);
 }
 
-void right(double degree) {
+void turnRight(double degree, int time) {
   for(angle = 1175; angle <=(1350/180)*(90+degree)+500;angle +=1){ // Turn some degrees to the right
-    servo.writeMicroseconds(angle);
-    delay(5);
+  servo.writeMicroseconds(angle);
+  delay(5);
+  time = time - 10;
+  }
+  delay(time);
+  for(angle = (1350/180)*(90+degree)+500; angle>=  1175; angle -=1){ //return servo to straight (90 degrees)
+    servo.writeMicroseconds(angle); 
+  delay(5);
   }
 }
 
-void left(double degree) {
+void turnLeft(double degree, int time) {
   for(angle = 1175; angle >=(1350/180)*(90-degree)+500;angle -=1){ // Turn some degrees to the right
-    servo.writeMicroseconds(angle);
-    delay(5);
+  servo.writeMicroseconds(angle);
+  delay(5);
+  time = time - 10;
+  }
+  delay(time);
+  for(angle = (1350/180)*(90-degree)+500; angle<= 1175; angle +=1){ //return servo to straight (90 degrees)
+    servo.writeMicroseconds(angle); 
+  delay(5);
   }
 }
 
 void repositionLeft() {
-  left(40);
   drive();
-  delay(5000);
+  turnLeft(40, 5000);
   cease();
   steady90();
 }
 
 void repositionRight() {
-  right(40);
   drive();
-  delay(5000);
+  turnRight(40, 5000);
   cease();
   steady90();
 }
 
 void rotateLeft(int degree) {
-  right(40);
   drive();
-  delay(25*degree);
+  turnLeft(40, 25*degree);
   cease();
   steady90();
 }
 
 void rotateRight(int degree) {
-  left(40);
   drive();
-  delay(25*degree);
+  turnRight(40, 25*degree);
   cease();
   steady90();
 }
