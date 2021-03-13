@@ -1,0 +1,124 @@
+Dependencies for Project 'Sensor_Collection_Module', Target 'KL25Z Flash': (DO NOT MODIFY !)
+F (.\startup_MKL25Z4.s)(0x603EE510)(--cpu Cortex-M0+ --pd "__EVAL SETA 1" -g --pd "__MICROLIB SETA 1"-I.\RTE\_KL25Z_Flash-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include--pd "__UVISION_VERSION SETA 526"--pd "_RTE_ SETA 1"--pd "MKL25Z128xxx4 SETA 1"--list .\lst\startup_mkl25z4.lst--xref -o .\obj\startup_mkl25z4.o--depend .\obj\startup_mkl25z4.d)
+F (.\src\system_MKL25Z4.c)(0x603EE510)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -D__MICROLIB -gdwarf-3 -Oz -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I inc-I./RTE/_KL25Z_Flash-ID:/Keil_v5/ARM/PACK/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/ARM/PACK/Keil/Kinetis_KLxx_DFP/1.15.0/Device/Include-D__UVISION_VERSION="526" -D_RTE_ -DMKL25Z128xxx4-o ./obj/system_mkl25z4.o -MD)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5AB16F14)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\MKL25Z4.h)(0x585C32DA)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\core_cm0plus.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_version.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_compiler.h)(0x5E83BD92)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_armclang.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_compat.h)(0x5A8F7A58)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x59117E54)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\system_MKL25Z4.h)(0x5644D36A)
+F (.\src\main.c)(0x60455089)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -D__MICROLIB -gdwarf-3 -Oz -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I inc-I./RTE/_KL25Z_Flash-ID:/Keil_v5/ARM/PACK/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/ARM/PACK/Keil/Kinetis_KLxx_DFP/1.15.0/Device/Include-D__UVISION_VERSION="526" -D_RTE_ -DMKL25Z128xxx4-o ./obj/main.o -MD)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\MKL25Z4.H)(0x585C32DA)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5AB16F14)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\core_cm0plus.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_version.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_compiler.h)(0x5E83BD92)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_armclang.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_compat.h)(0x5A8F7A58)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x59117E54)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\system_MKL25Z4.h)(0x5644D36A)
+I (inc\gpio_defs.h)(0x603EE510)
+I (inc\LEDs.h)(0x603EE510)
+I (inc\infared.h)(0x6042DA4E)
+I (inc\ultrasonic.h)(0x60455990)
+I (inc\serial.h)(0x6041342F)
+I (inc\interrupts.h)(0x6042D8AE)
+I (inc\motor_control.h)(0x6042DED1)
+F (.\src\LEDs.c)(0x604578F8)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -D__MICROLIB -gdwarf-3 -Oz -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I inc-I./RTE/_KL25Z_Flash-ID:/Keil_v5/ARM/PACK/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/ARM/PACK/Keil/Kinetis_KLxx_DFP/1.15.0/Device/Include-D__UVISION_VERSION="526" -D_RTE_ -DMKL25Z128xxx4-o ./obj/leds.o -MD)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\MKL25Z4.H)(0x585C32DA)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5AB16F14)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\core_cm0plus.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_version.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_compiler.h)(0x5E83BD92)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_armclang.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_compat.h)(0x5A8F7A58)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x59117E54)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\system_MKL25Z4.h)(0x5644D36A)
+I (inc\LEDs.h)(0x603EE510)
+I (inc\gpio_defs.h)(0x603EE510)
+F (.\src\debug_signals.c)(0x603EE510)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -D__MICROLIB -gdwarf-3 -Oz -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I inc-I./RTE/_KL25Z_Flash-ID:/Keil_v5/ARM/PACK/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/ARM/PACK/Keil/Kinetis_KLxx_DFP/1.15.0/Device/Include-D__UVISION_VERSION="526" -D_RTE_ -DMKL25Z128xxx4-o ./obj/debug_signals.o -MD)
+I (inc\gpio_defs.h)(0x603EE510)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\MKL25Z4.h)(0x585C32DA)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5AB16F14)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\core_cm0plus.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_version.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_compiler.h)(0x5E83BD92)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_armclang.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_compat.h)(0x5A8F7A58)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x59117E54)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\system_MKL25Z4.h)(0x5644D36A)
+F (.\src\infared.c)(0x60455311)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -D__MICROLIB -gdwarf-3 -Oz -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I inc-I./RTE/_KL25Z_Flash-ID:/Keil_v5/ARM/PACK/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/ARM/PACK/Keil/Kinetis_KLxx_DFP/1.15.0/Device/Include-D__UVISION_VERSION="526" -D_RTE_ -DMKL25Z128xxx4-o ./obj/infared.o -MD)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\MKL25Z4.H)(0x585C32DA)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5AB16F14)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\core_cm0plus.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_version.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_compiler.h)(0x5E83BD92)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_armclang.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_compat.h)(0x5A8F7A58)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x59117E54)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\system_MKL25Z4.h)(0x5644D36A)
+I (inc\LEDs.h)(0x603EE510)
+I (inc\gpio_defs.h)(0x603EE510)
+I (inc\serial.h)(0x6041342F)
+I (inc\motor_control.h)(0x6042DED1)
+I (inc\infared.h)(0x6042DA4E)
+F (.\src\motor_control.c)(0x604553B2)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -D__MICROLIB -gdwarf-3 -Oz -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I inc-I./RTE/_KL25Z_Flash-ID:/Keil_v5/ARM/PACK/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/ARM/PACK/Keil/Kinetis_KLxx_DFP/1.15.0/Device/Include-D__UVISION_VERSION="526" -D_RTE_ -DMKL25Z128xxx4-o ./obj/motor_control.o -MD)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\MKL25Z4.H)(0x585C32DA)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5AB16F14)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\core_cm0plus.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_version.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_compiler.h)(0x5E83BD92)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_armclang.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_compat.h)(0x5A8F7A58)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x59117E54)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\system_MKL25Z4.h)(0x5644D36A)
+I (inc\gpio_defs.h)(0x603EE510)
+I (inc\serial.h)(0x6041342F)
+I (inc\motor_control.h)(0x6042DED1)
+F (.\src\serial.c)(0x60453650)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -D__MICROLIB -gdwarf-3 -Oz -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I inc-I./RTE/_KL25Z_Flash-ID:/Keil_v5/ARM/PACK/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/ARM/PACK/Keil/Kinetis_KLxx_DFP/1.15.0/Device/Include-D__UVISION_VERSION="526" -D_RTE_ -DMKL25Z128xxx4-o ./obj/serial.o -MD)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\mkl25z4.h)(0x585C32DA)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5AB16F14)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\core_cm0plus.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_version.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_compiler.h)(0x5E83BD92)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_armclang.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_compat.h)(0x5A8F7A58)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x59117E54)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\system_MKL25Z4.h)(0x5644D36A)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdio.h)(0x5AB16F24)
+I (D:\Keil_v5\ARM\ARMCLANG\include\string.h)(0x5AB16F24)
+F (.\src\ultrasonic.c)(0x60455B35)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -D__MICROLIB -gdwarf-3 -Oz -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I inc-I./RTE/_KL25Z_Flash-ID:/Keil_v5/ARM/PACK/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/ARM/PACK/Keil/Kinetis_KLxx_DFP/1.15.0/Device/Include-D__UVISION_VERSION="526" -D_RTE_ -DMKL25Z128xxx4-o ./obj/ultrasonic.o -MD)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\MKL25Z4.H)(0x585C32DA)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5AB16F14)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\core_cm0plus.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_version.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_compiler.h)(0x5E83BD92)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_armclang.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_compat.h)(0x5A8F7A58)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x59117E54)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\system_MKL25Z4.h)(0x5644D36A)
+I (inc\gpio_defs.h)(0x603EE510)
+I (inc\serial.h)(0x6041342F)
+I (inc\motor_control.h)(0x6042DED1)
+I (inc\ultrasonic.h)(0x60455990)
+F (.\src\interrupts.c)(0x604557B2)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -D__MICROLIB -gdwarf-3 -Oz -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -I inc-I./RTE/_KL25Z_Flash-ID:/Keil_v5/ARM/PACK/ARM/CMSIS/5.7.0/CMSIS/Core/Include-ID:/Keil_v5/ARM/PACK/Keil/Kinetis_KLxx_DFP/1.15.0/Device/Include-D__UVISION_VERSION="526" -D_RTE_ -DMKL25Z128xxx4-o ./obj/interrupts.o -MD)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\MKL25Z4.H)(0x585C32DA)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x5AB16F14)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\core_cm0plus.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_version.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_compiler.h)(0x5E83BD92)
+I (D:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_armclang.h)(0x5E8F87F2)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_compat.h)(0x5A8F7A58)
+I (D:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h)(0x59117E54)
+I (D:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.15.0\Device\Include\system_MKL25Z4.h)(0x5644D36A)
+I (D:\Keil_v5\ARM\ARMCLANG\include\stdio.h)(0x5AB16F24)
+I (D:\Keil_v5\ARM\ARMCLANG\include\math.h)(0x5AB16F24)
+I (inc\gpio_defs.h)(0x603EE510)
+I (inc\serial.h)(0x6041342F)
+I (inc\motor_control.h)(0x6042DED1)
+I (inc\ultrasonic.h)(0x60455990)
+I (inc\infared.h)(0x6042DA4E)
+I (inc\interrupts.h)(0x6042D8AE)
