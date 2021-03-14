@@ -12,7 +12,7 @@ int enB = 3;
 int in3 = 5;
 int in4 = 4;
 //=================
-const int rightPin = 1;
+const int rightPin = 5;
 double rightAoA = 0.0;
 
 #define trigPin 11
@@ -41,17 +41,19 @@ int commandValue = 0;
 int rightMinVal = 15; //(1024/5)*0.260 Volt, theretical minimum is 0.0 Volt
 int rightMaxVal = 428; //(1024/5)*2.148 Volt, theoretical maximum is 1.8 Volt
 
-double right;
 double rightVolt;
 double x = 0.0;
 
 boolean newData = false;
+int path = 1;
+
+int loopnum = 0;
 
 void setup() {
   servo.attach(10);
   Serial.begin(9600);
   
-  servo.writeMicroseconds(1175);//0 to 180 map to 500 to 1850; hence 90 map to 1175
+  servo.writeMicroseconds(1305);//0 to 180 map to 500 to 1850; hence 90 map to 1175
   //================
   // Set all the motor control pins to outputs
   pinMode(enA, OUTPUT);
@@ -74,23 +76,20 @@ void setup() {
   while (Serial.available() > 0 ) {
     Serial.read();
   }
-}
-
-void printR(){//front pair
-  int rightRead = analogRead(rightPin);
-  rightVolt = rightRead*0.0048828125;
-  double rightAng = map(rightRead, rightMinVal, rightMaxVal, 180.0, 0.0);
-  double rightAngRad = rightAng/57.29578;
-  rightAoA = (57.29578)*asin(rightAngRad/3.14159265);
-  //Serial.print("Digital value Right:");
-  //Serial.println(rightRead);
-  //Serial.print("Voltage Right: ");
-  //Serial.println(rightVolt);
-  //Serial.print("Phase Difference Right: ");
-  //Serial.println(rightAng);
-  //Serial.print("Angle of Arrival Right: ");
-  //Serial.println(rightAoA);
-  //Serial.println();
+  
+  if (isFLdetected() && isFRdetected()){
+    cease();
+  }
+  else if (isFRdetected()){
+    path = 2;
+    drive();
+    rotateLeft();
+  }
+  else{
+    path = 1;
+    drive();
+    rotateRight();
+  }
 }
 
 void drive(){ 
@@ -160,36 +159,77 @@ void leftCure(double degree, double rate) {
   servo.writeMicroseconds(1305);
 }
 
+void setWheels(){
+  if (path == 1){
+    turnLeft(25, 4);
+  }
+  else if (path == 2) {
+    turnRight(25, 4);
+  }    
+}
+
+void fixWheels(){
+  if (path == 1){
+    leftCure(25, 4);
+  }
+  else if (path == 2) {
+    rightCure(25, 4);
+  }    
+}
+
 void repositionLeft() {
+  straight();
+  reverse();
+  
   drive();
-  turnLeft(50, 4);
-  delay(3000);
-  leftCure(50, 4);
+  turnLeft(45, 4);
+  delay(10000);
+  leftCure(45, 4);
   cease();
 }
 
 void repositionRight() {
   drive();
-  turnRight(45, 4);
-  delay(3000);
-  rightCure(45, 4);
-  cease();
-}
-
-void rotateLeft(int degree) {
-  drive();
-  turnLeft(45, 4);
-  delay(degree * 200);
-  leftCure(45, 4);
-  cease();
-}
-
-void rotateRight(int degree) {
-  drive();
   turnRight(50, 4);
-  delay(200* degree);
+  delay(10000);
   rightCure(50, 4);
   cease();
+}
+
+void rotateLeft() {
+  drive();
+  turnLeft(45, 4);
+  delay(15000);
+  leftCure(45, 4);
+  turnRight(50,4);
+  reverse();
+  delay(10000);
+  cease();
+  rightCure(50, 4);
+  drive();
+  turnLeft(45, 4);
+  delay(15000);
+  leftCure(45, 4);
+  cease();
+  turnRight(25, 4);
+}
+
+void rotateRight() {
+  drive();
+  turnRight(50, 4);
+  delay(15000);
+  rightCure(50, 4);
+  turnLeft(45,4);
+  reverse();
+  delay(10000);
+  cease();
+  leftCure(45, 4);
+  drive();
+  turnRight(50, 4);
+  delay(15000);
+  rightCure(50, 4);
+  cease();
+  turnLeft(25, 4);
 }
 /*
 void park() {
@@ -256,7 +296,7 @@ boolean isFLdetected(){ //Front Left sensor
   distFL = (durFL / 2) * 0.0343;
   delay(100);
   //Serial.print("Distance FL = ");
-  if (distFL <= 25) {
+  if (distFL <= 40) {
      //Serial.print(distFL);
      //Serial.println(" cm");
      //Serial.println("FL - Obstacle detected within 18cm");
@@ -278,7 +318,7 @@ boolean isFMdetected(){ //Front Middle sensor
   durFM = pulseIn(echoPinFM, HIGH);
   distFM = (durFM / 2) * 0.0343;
   //Serial.print("Distance FM = ");
-  if (distFM <= 25) {
+  if (distFM <= 10) {
      //Serial.print(distFM);
      //Serial.println(" cm");
      //Serial.println("FM - Obstacle detected within 18cm");
@@ -302,90 +342,33 @@ boolean isFRdetected(){ //Front Right sensor
   durFR = pulseIn(echoPinFR, HIGH);
   distFR = (durFR / 2) * 0.0343;
   //Serial.print("Distance FR = ");
-  if (distFR <= 25) {
-     //Serial.print(distFR);
+  if (distFR <= 40) {
+     //Serial.print(distFL);
      //Serial.println(" cm");
-     //Serial.println("FR - Obstacle detected within 18cm");
-     delay(100);
+     //Serial.println("FL - Obstacle detected within 18cm");
      return true;
      }
   else {
-    //Serial.println("FR - No Obstacle detected within 18cm");
-    delay(100);
+    //Serial.println("FL - No Obstacle detected within 18cm");
     return false;
     }
 }
 
-boolean isRLdetected(){ //Rear Left sensor
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  
-  durRL = pulseIn(echoPinRL, HIGH);
-  distRL = (durRL / 2) * 0.0343;
-  //Serial.print("Distance RL = ");
-  if (distRL <= 25) {
-     //Serial.print(distRL);
-     //Serial.println(" cm");
-     //Serial.println("RL - Obstacle detected within 18cm");
-     return true;
-     }
-     else {
-    //Serial.println("RL - No Obstacle detected within 18cm");
-    return false;
-    delay(5);
-    }
-  delay(5);
-}
-
-boolean isRMdetected(){ //Rear Middle sensor
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  
-  durRM = pulseIn(echoPinRM, HIGH);
-  distRM = (durRM / 2) * 0.0343;
-  //Serial.print("Distance RM = ");
-  if (distRM <= 25) {
-     //Serial.print(distRM);
-     //Serial.println(" cm");
-     //Serial.println("RM - Obstacle detected within 18cm");
-     return true;
-     }
-     else {
-    //Serial.println("RM - No Obstacle detected within 18cm");
-    return false;
-    delay(5);
-    }
-  delay(5);
-}
-
-boolean isRRdetected(){ //Rear Right sensor
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  
-  durRR = pulseIn(echoPinRR, HIGH);
-  distRR = (durRR / 2) * 0.0343;
-  //Serial.print("Distance RR = ");
-  if (distRR <= 25) {
-     //Serial.print(distRR);
-     //Serial.println(" cm");
-     //Serial.println("RR - Obstacle detected within 18cm");
-     return true;
-     }
-     else {
-    //Serial.println("RR - No Obstacle detected within 18cm");
-    return false;
-    delay(5);
-    }
-  delay(5);
+void printR(){//front pair
+  int rightRead = analogRead(rightPin);
+  rightVolt = rightRead*0.0048828125;
+  double rightAng = map(rightRead, rightMinVal, rightMaxVal, 180.0, 0.0);
+  double rightAngRad = rightAng/57.29578;
+  rightAoA = (57.29578)*asin(rightAngRad/3.14159265);
+  //Serial.print("Digital value Right:");
+  //Serial.println(rightRead);
+  //Serial.print("Voltage Right: ");
+  //Serial.println(rightVolt);
+  //Serial.print("Phase Difference Right: ");
+  //Serial.println(rightAng);
+  //Serial.print("Angle of Arrival Right: ");
+  //Serial.println(rightAoA);
+  //Serial.println();
 }
 
 
@@ -505,11 +488,11 @@ void doCommand() {
   if (strcmp(command,"rotate") == 0) {
     if (commandValue > 180){
       commandValue = 360 - commandValue;
-      rotateLeft(commandValue);
+      //rotateLeft(commandValue);
       Serial.println("done rotate left");
     }
     else {
-      rotateRight(commandValue);
+      //rotateRight(commandValue);
       Serial.println("done rotate right");
     }
   }
@@ -538,15 +521,109 @@ void doCommand() {
   */
 }
 
+boolean isRLdetected(){ //Rear Left sensor
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  durRL = pulseIn(echoPinRL, HIGH);
+  distRL = (durRL / 2) * 0.0343;
+  //Serial.print("Distance RL = ");
+  if (distRL <= 25) {
+     //Serial.print(distRL);
+     //Serial.println(" cm");
+     //Serial.println("RL - Obstacle detected within 18cm");
+     return true;
+     }
+     else {
+    //Serial.println("RL - No Obstacle detected within 18cm");
+    return false;
+    delay(5);
+    }
+  delay(5);
+}
+
+boolean isRMdetected(){ //Rear Middle sensor
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  durRM = pulseIn(echoPinRM, HIGH);
+  distRM = (durRM / 2) * 0.0343;
+  //Serial.print("Distance RM = ");
+  if (distRM <= 25) {
+     //Serial.print(distRM);
+     //Serial.println(" cm");
+     //Serial.println("RM - Obstacle detected within 18cm");
+     return true;
+     }
+     else {
+    //Serial.println("RM - No Obstacle detected within 18cm");
+    return false;
+    delay(5);
+    }
+  delay(5);
+}
+
+boolean isRRdetected(){ //Rear Right sensor
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  durRR = pulseIn(echoPinRR, HIGH);
+  distRR = (durRR / 2) * 0.0343;
+  //Serial.print("Distance RR = ");
+  if (distRR <= 25) {
+     //Serial.print(distRR);
+     //Serial.println(" cm");
+     //Serial.println("RR - Obstacle detected within 18cm");
+     return true;
+     }
+     else {
+    //Serial.println("RR - No Obstacle detected within 18cm");
+    return false;
+    delay(5);
+    }
+  delay(5);
+}
+
+
 
 void loop(){
-  turnLeft(45, 4);
-  if (isFLdetected() || isFMdetected() || isFRdetected()){
-     reverse();
+  //cease();
+  /*
+  if (isRMdetected()){
+    cease();
+    while(1);
+  }*/
+  
+  if (rightLKAstatus()) {
+    fixWheels();
+    turnLeft(45,4);
+    while (rightLKAstatus()){
+      drive();
+    }
+    delay(7000);
+    leftCure(45,4);
+    setWheels();
+  } 
+  else if (leftLKAstatus()){
+    fixWheels();
+    turnRight(50,4);
+    while (leftLKAstatus()){
+      drive();
+    }
+    delay(7000);
+    rightCure(50,4);
+    setWheels();
   }
-  else if (isRLdetected() || isRMdetected() || isRRdetected()){
-    drive();
-  }
+  drive();
   
 
   /*
