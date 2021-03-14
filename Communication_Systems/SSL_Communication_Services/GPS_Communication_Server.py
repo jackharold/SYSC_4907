@@ -7,7 +7,7 @@ import geocoder
 serverCert = "gpsServer.crt"
 serverKey = "gpsServer.key"
 clientCertFolder = "./BaseStationClientCerts"
-serverIP = "127.0.0.1"
+serverIP = "0.0.0.0"
 serverPort = 14700
 clientDataFormat = "20s"
 serverDataFormat = "ff"

@@ -23,14 +23,14 @@ def debugClient(serverType = "", serverIp = "", serverPort = "", requestCommand 
     while serverType == "":
         serverType = str(input("Enter Server Type: "))
         
-        if(serverType == "Base"):
-            serverCert = gpsServerCert
-            serverName = gpsServerName
-        elif(serverType == "Car"):
-            serverCert = gpsClientCert
-            serverName = gpsClientName
-        else:
-            continue
+    if(serverType == "Base"):
+        serverCert = gpsServerCert
+        serverName = gpsServerName
+    elif(serverType == "Car"):
+        serverCert = gpsClientCert
+        serverName = gpsClientName
+    else:
+        return "Invalid Server Type"
         
     while serverIp == "":
         serverIp = str(input("Enter Server IP Address: "))
@@ -73,21 +73,20 @@ def debugClient(serverType = "", serverIp = "", serverPort = "", requestCommand 
     
     if (debug): print("debugClient: --- Received Reply ---")
     
-    reply = struct.unpack(serverDataFormat, data)
-    
-    
-    # After the request is fulfilled, close connection 
-    clientConnection.close()
-    
-    # Test formatting against example
-    if (type(reply) == type( (0.0, -1.2) )) :
-        return reply
-    else:
-        return "Request Unsuccessful"
+    reply = struct.unpack(clientDataFormat, data)
+
+    return reply
     
 
 # Start the server with debug active and print the Location
 if __name__ == '__main__':
     #print("Curent Base Station GPS Location:", debugClient(debug=1))
-    print("Returned:", debugClient(serverIp="127.0.0.1", debug=1))
-    
+    while True:
+        try:
+            print("Returned:", debugClient(serverType = "Car", serverIp="127.0.0.1", serverPort="14800", debug=1))
+        except KeyboardInterrupt as e:
+            print("\nExiting Client ...")
+            break
+        except Exception as e:
+            print(e)
+            break
