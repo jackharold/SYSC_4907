@@ -2,13 +2,13 @@ from socket import *
 import ssl
 import struct
 import geocoder
-import GPS_Communication_Client
+import System_Command_Handler
 
 # Initialize Constants needed for connections
 serverCert = "carServer.crt"
 serverKey = "carServer.key"
 clientCertFolder = "./CarClientCerts"
-serverIP = "127.0.0.1"
+serverIP = "0.0.0.0"
 serverPort = 14800
 clientDataFormat = "20s"
 serverDataFormat = "ff"
@@ -51,16 +51,13 @@ def carMainServer(debug = False):
             
             if (debug): print("carServer: --- Recieved Message:", message, "---")
             
-            # Decide on action based on the received message
-            if bytes.decode(message[0]).strip("\x00") == "TestGetGPS":
+            # Process the Incoming Command
+            systemCommand = bytes.decode(message[0]).strip("\x00")
+            command_result = System_Command_Handler.parseCommand(systemCommand)
+
+            clientConnection.send(command_result)
                 
-                # Get current GPS location
-                currentLocation = GPS_Communication_Client.gpsPingClient(debug=1)
-                
-                returnMessage = struct.pack(serverDataFormat, currentLocation[0], currentLocation[1])
-                clientConnection.send(returnMessage)
-                
-                if (debug): print("carServer: --- Sent Message:", currentLocation, "---")
+            if (debug): print("carServer: --- Sent Message:", command_result, "---")
         
         except Exception as e:
             print(e)
@@ -73,5 +70,5 @@ def carMainServer(debug = False):
 
 # Start the server with debug active
 if __name__ == '__main__':
-    carMainServer(debug=1)
+    carMainServer(debug=False)
     
