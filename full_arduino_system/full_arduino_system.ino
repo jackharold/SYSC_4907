@@ -162,33 +162,33 @@ void leftCure(double degree, double rate) {
 
 void repositionLeft() {
   drive();
-  turnLeft(30, 4);
+  turnLeft(50, 4);
   delay(3000);
-  leftCure(30, 4);
+  leftCure(50, 4);
   cease();
 }
 
 void repositionRight() {
   drive();
-  turnRight(40, 4);
+  turnRight(45, 4);
   delay(3000);
-  rightCure(40, 4);
+  rightCure(45, 4);
   cease();
 }
 
 void rotateLeft(int degree) {
   drive();
-  turnLeft(30, 4);
+  turnLeft(45, 4);
   delay(degree * 200);
-  leftCure(30, 4);
+  leftCure(45, 4);
   cease();
 }
 
 void rotateRight(int degree) {
   drive();
-  turnRight(40, 4);
-  delay(10000);
-  rightCure(40, 4);
+  turnRight(50, 4);
+  delay(200* degree);
+  rightCure(50, 4);
   cease();
 }
 /*
@@ -539,12 +539,44 @@ void doCommand() {
 }
 
 
-void loop() {
-  rotateRight(45);
-  drive();
-  delay(5000);
-  cease();
+void loop(){
+  turnLeft(45, 4);
+  if (isFLdetected() || isFMdetected() || isFRdetected()){
+     reverse();
+  }
+  else if (isRLdetected() || isRMdetected() || isRRdetected()){
+    drive();
+  }
+  
+
+  /*
+  if (isFLdetected()){
+    rotateRight(45);
+    turnRight(45, 4);
+    drive();
+    delay(10000);
+    rightCure(45, 4);
+    delay(5000);
+    turnLeft(45, 4);
+    delay(5000);
+    leftCure(45, 4);
+    cease();
+  }
+  else if (isFRdetected()){
+    rotateLeft(45);
+    turnLeft(45, 4);
+    drive();
+    delay(10000);
+    leftCure(45, 4);
+    delay(5000);
+    turnRight(45, 4);
+    delay(5000);
+    rightCure(45, 4);
+    cease();
+    
+  }
   while(1);
+  */
   /*
   strcpy(command, "ultrasonic");
   commandValue = 1;
