@@ -18,7 +18,7 @@ def parseCommand(command):
         return struct.pack(mainDataFormat, "Started Robot")
 
     elif command == "Shutdown":
-        
+        central_code.stop_program()
         return struct.pack(mainDataFormat, "Stopped Robot")
 
     elif command == "TestGetGPS":

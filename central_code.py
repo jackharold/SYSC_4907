@@ -143,8 +143,11 @@ def check_ir_sensor(ser):
     return False
 
 def main():
+    global continue_program
+    continue_program = True
+
     path = 1
-    while (path != 6):
+    while (path != 6 and continue_program):
         if check_ir_sensor():
             if check_ultrasonic():
                 check_camera()
@@ -157,4 +160,8 @@ def main():
 
     send_comamnd("<stop, 1>")
 
+
+def stop_program():
+    global continue_program
+    continue_program = False
 
