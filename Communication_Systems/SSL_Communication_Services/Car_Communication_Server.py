@@ -1,3 +1,6 @@
+import sys
+sys.path.append("../..")
+
 from socket import *
 import ssl
 import struct

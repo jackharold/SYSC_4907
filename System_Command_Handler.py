@@ -13,7 +13,7 @@ def parseCommand(command):
 
     # Decide on action based on the received message
     if command == "Start":
-        main_thread = Thread(target=central_code.main(), args=(, ))
+        main_thread = Thread(target=central_code.main(), args=())
         main_thread.start()
         return struct.pack(mainDataFormat, "Started Robot")
 
