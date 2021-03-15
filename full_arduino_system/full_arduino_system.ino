@@ -178,22 +178,19 @@ void fixWheels(){
 }
 
 void repositionLeft() {
-  straight();
-  reverse();
-  
-  drive();
-  turnLeft(45, 4);
-  delay(10000);
-  leftCure(45, 4);
-  cease();
+  fixWheels();
+  turnLeft(45,4);
+  delay(5000);
+  leftCure(45,4);
+  setWheels();
 }
 
 void repositionRight() {
-  drive();
-  turnRight(50, 4);
-  delay(10000);
-  rightCure(50, 4);
-  cease();
+  fixWheels();
+  turnRight(50,4);
+  delay(5000);
+  rightCure(50,4);
+  setWheels();
 }
 
 void rotateLeft() {
@@ -211,7 +208,7 @@ void rotateLeft() {
   delay(15000);
   leftCure(45, 4);
   cease();
-  turnRight(25, 4);
+  setWheels();
 }
 
 void rotateRight() {
@@ -229,60 +226,11 @@ void rotateRight() {
   delay(15000);
   rightCure(50, 4);
   cease();
-  turnLeft(25, 4);
+  setWheels();
 }
-/*
+
 void park() {
-  dleft = measureDistance(TrigPin4, EchoPin5);
-  dright = measureDistance(TrigPin6, EchoPin7);
-  distance = measureDistance(TrigPin8, EchoPin9);
-  drive();
-  right(90); //Angle of arrival (AOA)
   
-  delay(1000);
-  while (distance > 6) {
-    reverse();
-  }
-  if (dleft < dright){
-    //cease
-    //move forward
-    //turn left at an angle
-    //cease
-    //turn right at the same angle and reverse
-    
-    cease();
-    delay(1000);
-    drive();
-    left(30); //left30();
-    delay(1000);
-    cease();
-    delay(1000);
-    reverse();
-    right(30); //right30();
-  }
-  if (dleft > dright){
-    //cease
-    //move forward
-    //turn left at an angle and reverse
-    //cease
-    //turn right at the same angle
-    //reverse
-    
-    cease();
-    delay(1000);
-    right(30); //right30();
-    drive();
-    
-    delay(1000);
-    cease();
-    delay(1000);
-    left(30); //left30();
-    reverse();
-    
-  }
-  if (distance == dleft == dright || distance < 6){
-     cease();
-  }
 } */
 
 boolean isFLdetected(){ //Front Left sensor
@@ -294,18 +242,8 @@ boolean isFLdetected(){ //Front Left sensor
   
   durFL = pulseIn(echoPinFL, HIGH);
   distFL = (durFL / 2) * 0.0343;
-  delay(100);
-  //Serial.print("Distance FL = ");
-  if (distFL <= 40) {
-     //Serial.print(distFL);
-     //Serial.println(" cm");
-     //Serial.println("FL - Obstacle detected within 18cm");
-     return true;
-     }
-  else {
-    //Serial.println("FL - No Obstacle detected within 18cm");
-    return false;
-    }
+  delay(200);
+  return (distFL <= 40);
 }
 
 boolean isFMdetected(){ //Front Middle sensor
@@ -317,19 +255,8 @@ boolean isFMdetected(){ //Front Middle sensor
   
   durFM = pulseIn(echoPinFM, HIGH);
   distFM = (durFM / 2) * 0.0343;
-  //Serial.print("Distance FM = ");
-  if (distFM <= 10) {
-     //Serial.print(distFM);
-     //Serial.println(" cm");
-     //Serial.println("FM - Obstacle detected within 18cm");
-     delay(100);
-     return true;
-     }
-  else {
-    //Serial.println("FM - No Obstacle detected within 18cm");
-    delay(100);
-    return false;
-    }
+  delay(200);
+  return (distFM <= 10);
 }
 
 boolean isFRdetected(){ //Front Right sensor
@@ -341,34 +268,56 @@ boolean isFRdetected(){ //Front Right sensor
   
   durFR = pulseIn(echoPinFR, HIGH);
   distFR = (durFR / 2) * 0.0343;
-  //Serial.print("Distance FR = ");
-  if (distFR <= 40) {
-     //Serial.print(distFL);
-     //Serial.println(" cm");
-     //Serial.println("FL - Obstacle detected within 18cm");
-     return true;
-     }
-  else {
-    //Serial.println("FL - No Obstacle detected within 18cm");
-    return false;
-    }
+  delay(200);
+  return (distFR <= 40);
 }
 
-void printR(){//front pair
+boolean isRLdetected(){ //Rear Left sensor
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  durRL = pulseIn(echoPinRL, HIGH);
+  distRL = (durRL / 2) * 0.0343;
+  delay(200);
+  return (distRL <= 40);
+}
+
+boolean isRMdetected(){ //Rear Middle sensor
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  durRM = pulseIn(echoPinRM, HIGH);
+  distRM = (durRM / 2) * 0.0343;
+  delay(200);
+  return (distRM <= 10);
+}
+
+boolean isRRdetected(){ //Rear Right sensor
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  durRR = pulseIn(echoPinRR, HIGH);
+  distRR = (durRR / 2) * 0.0343;
+  delay(200);
+  return (distRR <= 10);
+}
+
+void getAoA(){//front pair
   int rightRead = analogRead(rightPin);
   rightVolt = rightRead*0.0048828125;
   double rightAng = map(rightRead, rightMinVal, rightMaxVal, 180.0, 0.0);
   double rightAngRad = rightAng/57.29578;
   rightAoA = (57.29578)*asin(rightAngRad/3.14159265);
-  //Serial.print("Digital value Right:");
-  //Serial.println(rightRead);
-  //Serial.print("Voltage Right: ");
-  //Serial.println(rightVolt);
-  //Serial.print("Phase Difference Right: ");
-  //Serial.println(rightAng);
-  //Serial.print("Angle of Arrival Right: ");
-  //Serial.println(rightAoA);
-  //Serial.println();
+  return rightAoA; 
 }
 
 
@@ -380,7 +329,7 @@ boolean leftLKAstatus(){
   else {
     //Serial.println("Car within the left lane marking");
     return false;
-    }
+  }
 }
 
 boolean rightLKAstatus(){ 
@@ -391,9 +340,55 @@ boolean rightLKAstatus(){
   else {
     //Serial.println("Car within the right lane marking");
     return false;
-    }
+  }
 }
 
+void checkIR() {
+  if (rightLKAstatus()) {
+    fixWheels();
+    turnLeft(45,4);
+    while (rightLKAstatus()){
+      drive();
+    }
+    delay(7000);
+    leftCure(45,4);
+    setWheels();
+    Serial.println("IR corrected to the left");
+  } 
+  else if (leftLKAstatus()){
+    fixWheels();
+    turnRight(50,4);
+    while (leftLKAstatus()){
+      drive();
+    }
+    delay(7000);
+    rightCure(50,4);
+    setWheels();
+    Serial.println("IR corrected to the right");
+  }
+  else {
+    Serial.println("IR checked");
+  }
+}
+
+void start()
+  {if (isFLdetected() && isFRdetected()){
+    cease();
+    Serial.println("Both sensors detected");
+  }
+  else if (isFRdetected()){
+    path = 2;
+    drive();
+    rotateLeft();
+    Serial.println("Left path chosen");
+  }
+  else{
+    path = 1;
+    drive();
+    rotateRight();
+    Serial.println("Right path chosen");
+  }
+}
 void recvWithStartEndMarkers() {
   static boolean recvInProgress = false;
   static byte ndx = 0;
@@ -431,14 +426,11 @@ void parseData() {      // split the data into its parts
 
   strtokIndx = strtok(tempChars,",");      // get the first part - the string
   strcpy(command, strtokIndx); // copy it to messageFromPC
-  //Serial.print(command);
   strtokIndx = strtok(NULL, ","); // this continues where the previous call left off
   commandValue = atoi(strtokIndx);     // convert this part to an integer
-  //Serial.print(strtokIndx);
 }
 
 void doCommand() {
-  //Serial.print(command);
   if (strcmp(command,"reposition") == 0){
     if (commandValue == 1){
       repositionLeft();
@@ -475,199 +467,41 @@ void doCommand() {
       else {
         Serial.println("False");
       }
-    }/*
-    if (commandValue == 2){
-      if (isRLdetected() || isRMdetected() || isRRdetected()) {
-        Serial.println("False");
-      }
-      else {
-        Serial.println("True");
-      }
-    }*/
+    }
   }
   if (strcmp(command,"rotate") == 0) {
     if (commandValue > 180){
-      commandValue = 360 - commandValue;
-      //rotateLeft(commandValue);
+      //commandValue = 360 - commandValue;
+      rotateLeft();
       Serial.println("done rotate left");
     }
     else {
-      //rotateRight(commandValue);
+      rotateRight();
       Serial.println("done rotate right");
     }
   }
+  if (strcmp(command,"start") == 0) {
+    start();
+  }
   if (strcmp(command,"drive") == 0) {
     drive();
-    delay(commandValue * 500);
     Serial.println("driving");
   }
   if (strcmp(command,"infrared") == 0){
-    if (leftLKAstatus() || rightLKAstatus()){
-      Serial.println("False");
-    }
-    else {
-      Serial.println("True");
-    }
+    checkIR();
   }
   if (strcmp(command,"stop") == 0){
     cease();
     Serial.println("stopped");
   }
-  /*
-  if (command == "park"){
+  if (strcmp(command,"park") == 0){
     park();
-    Serial.println("done");
   }
-  */
-}
-
-boolean isRLdetected(){ //Rear Left sensor
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  
-  durRL = pulseIn(echoPinRL, HIGH);
-  distRL = (durRL / 2) * 0.0343;
-  //Serial.print("Distance RL = ");
-  if (distRL <= 25) {
-     //Serial.print(distRL);
-     //Serial.println(" cm");
-     //Serial.println("RL - Obstacle detected within 18cm");
-     return true;
-     }
-     else {
-    //Serial.println("RL - No Obstacle detected within 18cm");
-    return false;
-    delay(5);
-    }
-  delay(5);
-}
-
-boolean isRMdetected(){ //Rear Middle sensor
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  
-  durRM = pulseIn(echoPinRM, HIGH);
-  distRM = (durRM / 2) * 0.0343;
-  //Serial.print("Distance RM = ");
-  if (distRM <= 25) {
-     //Serial.print(distRM);
-     //Serial.println(" cm");
-     //Serial.println("RM - Obstacle detected within 18cm");
-     return true;
-     }
-     else {
-    //Serial.println("RM - No Obstacle detected within 18cm");
-    return false;
-    delay(5);
-    }
-  delay(5);
-}
-
-boolean isRRdetected(){ //Rear Right sensor
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  
-  durRR = pulseIn(echoPinRR, HIGH);
-  distRR = (durRR / 2) * 0.0343;
-  //Serial.print("Distance RR = ");
-  if (distRR <= 25) {
-     //Serial.print(distRR);
-     //Serial.println(" cm");
-     //Serial.println("RR - Obstacle detected within 18cm");
-     return true;
-     }
-     else {
-    //Serial.println("RR - No Obstacle detected within 18cm");
-    return false;
-    delay(5);
-    }
-  delay(5);
 }
 
 
 
 void loop(){
-  //cease();
-  /*
-  if (isRMdetected()){
-    cease();
-    while(1);
-  }*/
-  
-  if (rightLKAstatus()) {
-    fixWheels();
-    turnLeft(45,4);
-    while (rightLKAstatus()){
-      drive();
-    }
-    delay(7000);
-    leftCure(45,4);
-    setWheels();
-  } 
-  else if (leftLKAstatus()){
-    fixWheels();
-    turnRight(50,4);
-    while (leftLKAstatus()){
-      drive();
-    }
-    delay(7000);
-    rightCure(50,4);
-    setWheels();
-  }
-  drive();
-  
-
-  /*
-  if (isFLdetected()){
-    rotateRight(45);
-    turnRight(45, 4);
-    drive();
-    delay(10000);
-    rightCure(45, 4);
-    delay(5000);
-    turnLeft(45, 4);
-    delay(5000);
-    leftCure(45, 4);
-    cease();
-  }
-  else if (isFRdetected()){
-    rotateLeft(45);
-    turnLeft(45, 4);
-    drive();
-    delay(10000);
-    leftCure(45, 4);
-    delay(5000);
-    turnRight(45, 4);
-    delay(5000);
-    rightCure(45, 4);
-    cease();
-    
-  }
-  while(1);
-  */
-  /*
-  strcpy(command, "ultrasonic");
-  commandValue = 1;
-  doCommand();
-  commandValue = 2;
-  doCommand();
-  commandValue = 3;
-  doCommand();
-  strcpy(command, "rotate");
-  commandValue = 45;
-  doCommand();
-  d*/
-  
-  /*
   recvWithStartEndMarkers();
   if (newData == true) {
     strcpy(tempChars, receivedChars);
@@ -676,5 +510,5 @@ void loop(){
     parseData();
     doCommand();
     newData = false;
-  }*/
+  }
 }

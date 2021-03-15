@@ -95,37 +95,9 @@ def check_gps(path, distance):
         path = 6
     return path
 
-def reset_to_start(path, distance):
-    response = send_command("<stop, 1>")
-    if path == 1:
-        response = send_command("<rotate, 180>")
-        response = send_command("<drive, " + str(distance) + ">")
-        response = send_command("<rotate, 135>")
-        path = 2
-    elif path == 2:
-        response = send_command("<rotate, 180>")
-        response = send_command("<drive, " + str(distance) + ">")
-        response = send_command("<rotate, 135>")
-        path = 3
-    elif path == 3:
-        response = send_command("<rotate, 180>")
-        response = send_command("<drive, " + str(distance) + ">")
-        response = send_command("<rotate, 270>")
-        path = 1
-    elif path == 4:
-        response = send_command("<rotate, 180>")
-        response = send_command("<drive, " + str(distance) + ">")
-        response = send_command("<rotate, 270>")
-        response = send_command("<drive, " + str(distance) + ">")
-        response = send_command("<rotate, 270>")
-        path = 1
-    elif path == 5:
-        response = send_command("<rotate, 180>")
-        response = send_command("<drive, " + str(distance) + ">")
-        response = send_command("<rotate, 315>")
-        response = send_command("<drive, " + str(distance) + ">")
-        response = send_command("<rotate, 135>")
-    return path
+def check_aoa():
+    send_command("AoA, 1")
+    
 
 def send_command(command):
     print("command: " + command)
@@ -143,55 +115,23 @@ def check_ir_sensor(ser):
     return False
 
 def main():
-    '''
-    path = 1
-    while (path != 6):
-        if check_ir_sensor():
-            if check_ultrasonic():
-                check_camera()
-                path = check_gps(path)
-                send_command("<drive, 1>")
-            else:
-                path = reset_to_start(path, distance)
-        else:
-            path = reset_to_start(path, distance)
-    '''
     ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
     ser.flushInput()
     ser.flushOutput()
-    ser.write("<stop, 1>".encode('utf-8'))
-    time.sleep(.1)
-    response = ser.readline().decode('utf-8').rstrip()
-    #check_ultrasonic()
     send_command("<stop, 1>")
-    path = 0
-    if not send_command("<ultrasonic, 1>") == "True":
-        path = 3
-        #send_command("<rotate, 315>")
-    elif not send_command("<ultrasonic, 2>") == "True":
-        path = 2
-    elif not send_command("<ultrasonic, 3>") == "True":
-        path = 1
-        send_command("<rotate, 45>")
-
-    if path == 1:
-        distance = 1
-        while path != 6:
-            check_camera()
-            path = check_gps(path, distance)
-            send_command("<drive, 1>")
-            distance += 1
-    send_command("<stop, 1>")
-    '''
-    path = 1
-    distance = 1
-    while path != 6:
+    send_command("<start, 1>")
+    park_mode = False
+    while(not park_mode):
+        if (bool(send_command("<ultrasonic, 1>"))):
+            break
+        send_command("<infrared, 1>")
         check_camera()
-        path = check_gps(path, distance)
+        check_AoA()
         send_command("<drive, 1>")
-        distance += 1
-        
-    send_command("<stop, 1>")'''
+    if park_mode:
+        send_command("<park, 1>")
+    send_command("<stop, 1>")
+
 
 if __name__ == "__main__":
     main()
