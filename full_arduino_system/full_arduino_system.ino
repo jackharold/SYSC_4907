@@ -230,8 +230,20 @@ void rotateRight() {
 }
 
 void park() {
-  
-} */
+  fixWheels();
+  turnLeft(45, 4);
+  while(getAoA() < 35);
+  leftCure(45, 4);
+  while(getAoA() < 50);
+  turnRight(50, 4);
+  while(getAoA() > 25);
+  rightCure(50, 4);
+  turnRight(25, 4);
+  while(getAoA() > 10);
+  rightCure(25,4);
+  while(!isFMdetected());
+  cease(); 
+}
 
 boolean isFLdetected(){ //Front Left sensor
   digitalWrite(trigPin, LOW);
@@ -311,7 +323,7 @@ boolean isRRdetected(){ //Rear Right sensor
   return (distRR <= 10);
 }
 
-void getAoA(){//front pair
+double getAoA(){//front pair
   int rightRead = analogRead(rightPin);
   rightVolt = rightRead*0.0048828125;
   double rightAng = map(rightRead, rightMinVal, rightMaxVal, 180.0, 0.0);
@@ -442,31 +454,12 @@ void doCommand() {
     }
   }
   if (strcmp(command,"ultrasonic") == 0){
-    if (commandValue == 1){
-      if (isFLdetected()){
-        Serial.println("True");
-      }
-      else {
-        Serial.println("False");
-      }
+    if (isFMdetected()){
+      cease();
+      Serial.println("False");
     }
-    if (commandValue == 2){
-      
-      if (isFMdetected()){  
-        Serial.println("True");
-      }
-      else {
-        Serial.println("False");
-      }
-    }
-    if (commandValue == 3) {
-      
-      if (isFRdetected()) {
-        Serial.println("True");
-      }
-      else {
-        Serial.println("False");
-      }
+    else {
+      Serial.println("True");
     }
   }
   if (strcmp(command,"rotate") == 0) {
@@ -496,6 +489,9 @@ void doCommand() {
   }
   if (strcmp(command,"park") == 0){
     park();
+  }
+  if (strcmp(command,"AoA") == 0){
+    getAoA();
   }
 }
 
