@@ -53,7 +53,7 @@ def check_camera():
 
     cap = cv.VideoCapture(0)
 
-    while (num_checks < 10) :
+    while (cap.isOpened() and num_checks < 10) :
         ret, frame = cap.read()
         canny = do_canny(frame)
         #cv.imshow("canny", canny)
@@ -70,11 +70,14 @@ def check_camera():
 
     if car_right_counter >= 5:
         send_command("<reposition, 1>")
+        return True
     elif car_left_counter >= 5:
         send_command("<reposition, 2>")
+        return True
 
     cap.release()
     cv.destroyAllWindows()
+    return False
 
 def check_ultrasonic():
     response = send_command("<ultrasonic, 1>")
@@ -96,7 +99,7 @@ def check_gps(path, distance):
     return path
 
 def check_aoa():
-    send_command("AoA, 1")
+    return send_command("AoA, 1")
     
 
 def send_command(command):
@@ -108,25 +111,34 @@ def send_command(command):
     print("response: " + response)
     return response
 
-def check_ir_sensor(ser):
-    response = send_comamnd("<infrared, 1>")
-    if bool(response):
+def check_ir_sensor():
+    if send_command("<infrared, 1>") == "True":
         return True
     return False
+
+def check_ultrasonic():
+    if send_command("<ultrasonic, 1>") == "True":
+        return True
+    return False
+    
 
 def main():
     ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
     ser.flushInput()
     ser.flushOutput()
+    ser.write(b"stop")
+    text = ser.readline().decode('utf-8').rstrip()
     send_command("<stop, 1>")
     send_command("<start, 1>")
     park_mode = False
     while(not park_mode):
-        if (bool(send_command("<ultrasonic, 1>"))):
+        if check_ultrasonic():
             break
-        send_command("<infrared, 1>")
-        check_camera()
-        check_AoA()
+        if check_ir_sensor():
+            continue
+        if check_camera():
+            continue
+        check_aoa()
         send_command("<drive, 1>")
     if park_mode:
         send_command("<park, 1>")

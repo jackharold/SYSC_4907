@@ -76,20 +76,6 @@ void setup() {
   while (Serial.available() > 0 ) {
     Serial.read();
   }
-  
-  if (isFLdetected() && isFRdetected()){
-    cease();
-  }
-  else if (isFRdetected()){
-    path = 2;
-    drive();
-    rotateLeft();
-  }
-  else{
-    path = 1;
-    drive();
-    rotateRight();
-  }
 }
 
 void drive(){ 
@@ -180,7 +166,7 @@ void fixWheels(){
 void repositionLeft() {
   fixWheels();
   turnLeft(45,4);
-  delay(5000);
+  delay(10000);
   leftCure(45,4);
   setWheels();
 }
@@ -188,7 +174,7 @@ void repositionLeft() {
 void repositionRight() {
   fixWheels();
   turnRight(50,4);
-  delay(5000);
+  delay(10000);
   rightCure(50,4);
   setWheels();
 }
@@ -198,6 +184,7 @@ void rotateLeft() {
   turnLeft(45, 4);
   delay(15000);
   leftCure(45, 4);
+  cease();
   turnRight(50,4);
   reverse();
   delay(10000);
@@ -216,6 +203,7 @@ void rotateRight() {
   turnRight(50, 4);
   delay(15000);
   rightCure(50, 4);
+  cease;
   turnLeft(45,4);
   reverse();
   delay(10000);
@@ -323,7 +311,7 @@ boolean isRRdetected(){ //Rear Right sensor
   return (distRR <= 10);
 }
 
-double getAoA(){//front pair
+int getAoA(){//front pair
   int rightRead = analogRead(rightPin);
   rightVolt = rightRead*0.0048828125;
   double rightAng = map(rightRead, rightMinVal, rightMaxVal, 180.0, 0.0);
@@ -365,7 +353,7 @@ void checkIR() {
     delay(7000);
     leftCure(45,4);
     setWheels();
-    Serial.println("IR corrected to the left");
+    Serial.println("True");
   } 
   else if (leftLKAstatus()){
     fixWheels();
@@ -376,10 +364,10 @@ void checkIR() {
     delay(7000);
     rightCure(50,4);
     setWheels();
-    Serial.println("IR corrected to the right");
+    Serial.println("True");
   }
   else {
-    Serial.println("IR checked");
+    Serial.println("False");
   }
 }
 
@@ -391,14 +379,20 @@ void start()
   else if (isFRdetected()){
     path = 2;
     drive();
-    rotateLeft();
+    turnLeft(45, 4);
+    delay(25000);
+    leftCure(45, 4);
     Serial.println("Left path chosen");
+    setWheels();
   }
   else{
     path = 1;
     drive();
-    rotateRight();
+    turnRight(45, 4);
+    delay(25000);
+    rightCure(45, 4);
     Serial.println("Right path chosen");
+    setWheels();
   }
 }
 void recvWithStartEndMarkers() {
@@ -456,10 +450,10 @@ void doCommand() {
   if (strcmp(command,"ultrasonic") == 0){
     if (isFMdetected()){
       cease();
-      Serial.println("False");
+      Serial.println("True");
     }
     else {
-      Serial.println("True");
+      Serial.println("False");
     }
   }
   if (strcmp(command,"rotate") == 0) {
@@ -490,8 +484,9 @@ void doCommand() {
   if (strcmp(command,"park") == 0){
     park();
   }
-  if (strcmp(command,"AoA") == 0){
-    getAoA();
+  if (strcmp(command,"aoa") == 0){ 
+    int aoa = getAoA();
+    Serial.println(aoa);
   }
 }
 
