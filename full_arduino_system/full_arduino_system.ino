@@ -485,8 +485,11 @@ void doCommand() {
     park();
   }
   if (strcmp(command,"aoa") == 0){ 
+    //Serial.println(command);
+    char straoa[5];
     int aoa = getAoA();
-    Serial.println(aoa);
+    sprintf(straoa, "%d", aoa);
+    Serial.println(straoa);
   }
 }
 

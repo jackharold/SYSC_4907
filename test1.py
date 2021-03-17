@@ -4,14 +4,6 @@ import matplotlib.pyplot as plt
 import serial
 import time
 
-# unit = 4 inches
-
-PATH_1_DISTANCE = 40
-PATH_2_DISTANCE = 5
-PATH_3_DISTANCE = 5
-PATH_4_DISTANCE = 5
-PATH_5_DISTANCE = 5
-
 def do_canny(frame):
     gray = cv.cvtColor(frame, cv.COLOR_RGB2GRAY)
     blur = cv.GaussianBlur(gray, (5, 5), 0)
@@ -31,7 +23,7 @@ def calculate_position(frame, lines):
             max_y2 = y2
         if y1 > max_y1:
             max_y1 = y1
-    print("max_y1: " + str(max_y1) + " max_y2: " + str(max_y2))
+    #print("max_y1: " + str(max_y1) + " max_y2: " + str(max_y2))
     
     if (max_y2 > 350) and (max_y1 > 350):
         return "Car Right"
@@ -83,28 +75,23 @@ def check_ultrasonic():
     response = send_command("<ultrasonic, 1>")
     return True
 
-def check_gps(path, distance):
-    if path == 1 and distance >= PATH_1_DISTANCE:
-        path = 6
-    elif path == 2 and distance >= PATH_2_DISTANCE:
-        response = send_command("<rotate, 45>")
-        path = 5
-    elif path == 3 and distance >= PATH_3_DISTANCE:
-        response = send_command("<rotate, 90>")
-        path = 4
-    elif path == 4 and distance >= PATH_4_DISTANCE:
-        path = 5
-    elif path == 5 and distance >= PATH_5_DISTANCE:
-        path = 6
-    return path
-
-def check_aoa():
-    return send_command("AoA, 1")
+def check_aoa(state):
+    angle = int(send_command("<aoa, 1>"))
+    if state == 0 and angle > 80:
+        state = 1
+    elif state == 1 and angle < 20:
+        state = 2
+    print("STATE IS NOW " + str(state))
+    return state
     
 
 def send_command(command):
     print("command: " + command)
-    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=30)
+    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=45)
+    ser.flushInput()
+    ser.flushOutput()
+    ser.flush()
+    time.sleep(.1)
     ser.write(command.encode('utf-8'))
     time.sleep(.1)
     response = ser.readline().decode('utf-8').rstrip()
@@ -130,17 +117,17 @@ def main():
     text = ser.readline().decode('utf-8').rstrip()
     send_command("<stop, 1>")
     send_command("<start, 1>")
-    park_mode = False
-    while(not park_mode):
+    state = 0
+    while(state < 2):
         if check_ultrasonic():
             break
         if check_ir_sensor():
             continue
         if check_camera():
             continue
-        check_aoa()
         send_command("<drive, 1>")
-    if park_mode:
+        state = check_aoa(state)
+    if state == 2:
         send_command("<park, 1>")
     send_command("<stop, 1>")
 
