@@ -1,3 +1,7 @@
+import sys
+sys.path.append("./Communication_Systems/Capability_Tests")
+import Serial_IR_Connection
+
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,6 +15,11 @@ PATH_2_DISTANCE = 5
 PATH_3_DISTANCE = 5
 PATH_4_DISTANCE = 5
 PATH_5_DISTANCE = 5
+
+IR_SENSOR_NUMBER = 5
+LEFT_IR = 0
+RIGHT_IR = 1
+CENTER_IR = [2,3,4]
 
 def do_canny(frame):
     gray = cv.cvtColor(frame, cv.COLOR_RGB2GRAY)
@@ -136,19 +145,37 @@ def send_command(command):
     print(response)
     return response
 
-def check_ir_sensor(ser):
-    response = send_comamnd("<infrared, 1>")
-    if bool(response):
-        return True
-    return False
+def check_ir_sensor(ir_sensor_array, ir_queue):
+
+    ir_sensor_array = Serial_IR_Connection.get_updated_ir_values(ir_sensor_array, ir_queue)
+    
+    # internal_path = 0
+
+    ## Parse Sensor Array and alter path (Not Correct Path Statements)
+    # if (ir_sensor_array[LEFT_IR]):
+    #     internal_path += 1
+    # if (ir_sensor_array[RIGHT_IR]):
+    #     internal_path -= 1
+    # 
+    # if (ir_sensor_array[i] for i in CENTER_IR):
+    #     internal_path += 4
+    #
+    #return not bool(ir_sensor_array)
+
+    # Old Variant
+    response = send_command("<infrared, 1>")
+    return bool(response)
 
 def main():
     global continue_program
     continue_program = True
 
+    ir_sensor_array = [0 for i in range(IR_SENSOR_NUMBER)]
+    shared_IR_queue = Serial_IR_Connection.init_ir_sensor_array(IR_SENSOR_NUMBER, "/dev/ttyAMA0", 9600)
+
     path = 1
     while (path != 6 and continue_program):
-        if check_ir_sensor():
+        if check_ir_sensor(ir_sensor_array, shared_IR_queue):
             if check_ultrasonic():
                 check_camera()
                 path = check_gps(path)
@@ -158,7 +185,7 @@ def main():
         else:
             path = reset_to_start(path, distance)
 
-    send_comamnd("<stop, 1>")
+    send_command("<stop, 1>")
 
 
 def stop_program():

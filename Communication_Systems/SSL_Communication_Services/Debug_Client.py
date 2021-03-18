@@ -9,6 +9,7 @@ clientCert = "debugClient.crt"
 clientKey = "debugClient.key"
 gpsServerName = "testServer.com"
 gpsClientName = "carServer.com"
+encryption_cipher = "ECDHE-ECDSA-AES128-GCM-SHA256"
 #serverIP = "127.0.0.1"
 #serverPort = 14700
 clientDataFormat = "20s"
@@ -48,6 +49,7 @@ def debugClient(serverType = "", serverIp = "", serverPort = "", requestCommand 
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
     context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH, cafile=serverCert)
     context.load_cert_chain(certfile=clientCert, keyfile=clientKey)
+    context.set_ciphers(encryption_cipher)
 
     clientSocket = socket(AF_INET, SOCK_STREAM)
     
@@ -73,9 +75,9 @@ def debugClient(serverType = "", serverIp = "", serverPort = "", requestCommand 
     
     if (debug): print("debugClient: --- Received Reply ---")
     
-    reply = struct.unpack(clientDataFormat, data)
+    reply = struct.unpack(clientDataFormat, data)[0]
 
-    return reply
+    return bytes.decode(reply).strip("\x00")
     
 
 # Start the server with debug active and print the Location
@@ -83,7 +85,7 @@ if __name__ == '__main__':
     #print("Curent Base Station GPS Location:", debugClient(debug=1))
     while True:
         try:
-            print("Returned:", debugClient(serverType = "Car", serverIp="127.0.0.1", serverPort="14800", debug=1))
+            print("Returned:", debugClient(serverType = "Car", serverIp="127.0.0.1", serverPort=14800, debug=1))
         except KeyboardInterrupt as e:
             print("\nExiting Client ...")
             break

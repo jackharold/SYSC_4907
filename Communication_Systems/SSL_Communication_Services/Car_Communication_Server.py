@@ -4,13 +4,13 @@ sys.path.append("../..")
 from socket import *
 import ssl
 import struct
-import geocoder
 import System_Command_Handler
 
 # Initialize Constants needed for connections
 serverCert = "carServer.crt"
 serverKey = "carServer.key"
 clientCertFolder = "./CarClientCerts"
+encryption_cipher = "ECDHE-ECDSA-AES128-GCM-SHA256"
 serverIP = "0.0.0.0"
 serverPort = 14800
 clientDataFormat = "20s"
@@ -27,12 +27,13 @@ def carMainServer(debug = False):
     context.load_verify_locations(capath=clientCertFolder)
     context.check_hostname = False
     context.verify_mode =ssl.CERT_NONE
+    context.set_ciphers(encryption_cipher)
     
     # Create thhe socket and link it to port 14700
     receivingSocket = socket(AF_INET, SOCK_STREAM)
     receivingSocket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
     receivingSocket.bind((serverIP, serverPort))
-    receivingSocket.listen(5)
+    receivingSocket.listen(1)
     
     # Begin Accepting Requests from the Client
     while True:
@@ -57,6 +58,7 @@ def carMainServer(debug = False):
             # Process the Incoming Command
             systemCommand = bytes.decode(message[0]).strip("\x00")
             command_result = System_Command_Handler.parseCommand(systemCommand)
+            command_result = struct.pack(clientDataFormat, bytes("Test Reply", "utf-8"))
 
             clientConnection.send(command_result)
                 
