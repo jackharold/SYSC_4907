@@ -110,25 +110,13 @@ def check_ultrasonic():
     
 
 def main():
-    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
-    ser.flushInput()
-    ser.flushOutput()
-    ser.write(b"stop")
-    text = ser.readline().decode('utf-8').rstrip()
     send_command("<stop, 1>")
     send_command("<start, 1>")
     state = 0
     while(state < 2):
-        if check_ultrasonic():
-            break
         if check_ir_sensor():
             continue
-        if check_camera():
-            continue
         send_command("<drive, 1>")
-        state = check_aoa(state)
-    if state == 2:
-        send_command("<park, 1>")
     send_command("<stop, 1>")
 
 
