@@ -40,4 +40,5 @@ This repository was created to organize the programs necessary for Project Team 
 -This code segment written for analog to digital conversion of phase angle readings from phase detector.
 -the code outputs orientation angle of the vehicle in real-time
 #### /steer_drive_us_lka-ir
--This is the updated test phase code for complete autonomous drive of the car with AoA self parking
+-This is the updated test phase code for complete autonomous drive of the car with AoA self parking - direct arduino controlled.
+-The code segments will be used to program the centralized Pi unit so the Arduino can receive commands from the Pi.
