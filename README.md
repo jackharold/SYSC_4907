@@ -31,7 +31,8 @@ This repository was created to organize the programs necessary for Project Team 
 - The FRDM KL25Z IR sensor data collection program is contained here along with a variant option that was briefly tested in hope of integrating ultrasonic sensors
 ---
 #### /full_arduino_system
-- This program is the latest version of the main program executed on the arduino module
+- The main program included here (full_arduino_system.ino) is the latest version of the main program executed on the arduino module
+- The other program (highNavDataRate_corrections.ino) is executed by the GPS navigation module
 ---
 #### /tests
 - This section contains python scripts used to test the vehicle
