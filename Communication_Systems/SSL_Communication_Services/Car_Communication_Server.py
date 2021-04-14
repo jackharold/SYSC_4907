@@ -45,7 +45,6 @@ def carMainServer(debug = False):
             
             clientConnection = context.wrap_socket(clientSocket, server_side=True)
         
-
             
             if (debug): print("carServer: --- Waiting for Data ---")
             
@@ -58,7 +57,6 @@ def carMainServer(debug = False):
             # Process the Incoming Command
             systemCommand = bytes.decode(message[0]).strip("\x00")
             command_result = System_Command_Handler.parseCommand(systemCommand)
-            command_result = struct.pack(clientDataFormat, bytes("Test Reply", "utf-8"))
 
             clientConnection.send(command_result)
                 

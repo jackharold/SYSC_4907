@@ -1,4 +1,5 @@
 import sys
+import time
 sys.path.append("./Communication_Systems/SSL_Communication_Services")
 #import GPS_Communication_Client
 
@@ -20,11 +21,14 @@ def parseCommand(command):
         central_code.stop_program()
         return package_reply("Stopped Robot")
 
-    elif command == "TestGetGPS":
-        # Get current GPS location, TEMPORARILY REMOVED
-        #currentLocation = GPS_Communication_Client.gpsPingClient(debug=1)
-        return package_reply("0,0") #(str(currentLocation[0]) + " " + str(currentLocation[1])))
+    elif command == "TestCommandHandler":
+        return package_reply("Command Received") 
     
+    elif command == "getCurrentTime":
+        # Return Ascii timestamp without year to fit the character limit
+        partial_timestamp = str(time.asctime()).rsplit(' ', 1)[0]
+        return package_reply(partial_timestamp)
+
     else:
         return package_reply("Bad Command")
 
